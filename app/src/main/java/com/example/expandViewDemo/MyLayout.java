@@ -2,6 +2,7 @@ package com.example.expandViewDemo;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
@@ -22,7 +23,7 @@ public class MyLayout extends LinearLayout {
         mScroller = new Scroller(context);
         mGestureDetector = new GestureDetector(context,
                 new GestureListenerImpl());
-        mScroller.setFinalY(-725);
+        mScroller.setFinalY(-840);
     }
 
     @Override
@@ -96,6 +97,7 @@ public class MyLayout extends LinearLayout {
     // 设置滚动的相对偏移
     protected void beginScroll(int dx, int dy) {
         // 第一,二个参数起始位置;第三,四个滚动的偏移量
+        Log.v("lilea","FinalY=="+mScroller.getFinalY()+" dy=="+dy);
         mScroller.startScroll(mScroller.getFinalX(), mScroller.getFinalY(), dx,
                 dy);
         // 必须执行invalidate()从而调用computeScroll()

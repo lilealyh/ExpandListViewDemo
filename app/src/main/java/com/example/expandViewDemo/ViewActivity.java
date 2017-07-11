@@ -3,6 +3,7 @@ package com.example.expandViewDemo;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ public class ViewActivity extends Activity {
     private AnimatedExpandableListView listView;
     private ExampleAdapter adapter;
     private int ExpandHeight=0;
+    private int visiableHeight=384;
     MyLayout myLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,17 +26,33 @@ public class ViewActivity extends Activity {
         List<GroupItem> items = new ArrayList<GroupItem>();
 
         // Populate our list with groups and it's children
-        for(int i = 1; i < 6; i++) {
+        for(int i = 1; i < 4; i++) {
             GroupItem item = new GroupItem();
 
             item.title = "Group " + i;
-
-            for(int j = 0; j < i; j++) {
-                ChildItem child = new ChildItem();
-                child.title = "Awesome item " + j;
-                child.hint = "Too awesome";
-
-                item.items.add(child);
+            if(i==1){
+                for(int j = 0; j < 1; j++) {
+                    ChildItem child = new ChildItem();
+                    child.title = "Awesome item " + j;
+                    child.hint = "Too awesome";
+                    item.items.add(child);
+                }
+            }
+            if(i==2){
+                for(int j = 0; j < 10; j++) {
+                    ChildItem child = new ChildItem();
+                    child.title = "Awesome item " + j;
+                    child.hint = "Too awesome";
+                    item.items.add(child);
+                }
+            }
+            if(i==3){
+                for(int j = 0; j < 4; j++) {
+                    ChildItem child = new ChildItem();
+                    child.title = "Awesome item " + j;
+                    child.hint = "Too awesome";
+                    item.items.add(child);
+                }
             }
 
             items.add(item);
@@ -57,18 +75,46 @@ public class ViewActivity extends Activity {
                 // We call collapseGroupWithAnimation(int) and
                 // expandGroupWithAnimation(int) to animate group
                 // expansion/collapse.
-                ExpandHeight=adapter.getRealChildrenCount(groupPosition)*97;
+                ExpandHeight=adapter.getRealChildrenCount(groupPosition)*128;
+                Log.v("lilea","expandheight=="+ExpandHeight+" currentViewHeight==="+getCurrentViewHeight());
                 if (listView.isGroupExpanded(groupPosition)) {
                     listView.collapseGroupWithAnimation(groupPosition);
-                    myLayout.beginScroll(0,-ExpandHeight);
+                    visiableHeight-=ExpandHeight;
+                    if(ExpandHeight>896){
+                        myLayout.beginScroll(0,-512);
+                    }
+                    else {
+                        myLayout.beginScroll(0,-ExpandHeight);
+                    }
                 } else {
                     listView.expandGroupWithAnimation(groupPosition);
-                    myLayout.beginScroll(0,ExpandHeight);
+                    visiableHeight+=ExpandHeight;
+
+                    if(ExpandHeight>896){
+                        myLayout.beginScroll(0,512);
+                    }
+                    else{
+
+                        myLayout.beginScroll(0,ExpandHeight);
+                    }
                 }
+                Log.v("lilea","visiableHeight=="+visiableHeight);
                 return true;
             }
 
         });
+    }
+    public int getCurrentViewHeight(){
+        int groupCount=adapter.getGroupCount();
+        int expandChildrenCount=0;
+        int height;
+        for (int j = 0; j <groupCount ; j++) {
+           if(listView.isGroupExpanded(j)){
+               expandChildrenCount+=adapter.getRealChildrenCount(j);
+           }
+        }
+        height=(expandChildrenCount+groupCount)*128;
+        return height;
     }
     private static class GroupItem {
         String title;
@@ -97,7 +143,7 @@ public class ViewActivity extends Activity {
 
         private List<GroupItem> items;
 
-        public ExampleAdapter(Context context) {
+        private ExampleAdapter(Context context) {
             inflater = LayoutInflater.from(context);
         }
 
@@ -121,7 +167,7 @@ public class ViewActivity extends Activity {
             ChildItem item = getChild(groupPosition, childPosition);
             if (convertView == null) {
                 holder = new ChildHolder();
-                convertView = inflater.inflate(R.layout.list_item, parent, false);
+                convertView = inflater.inflate(R.layout.item_clean, parent, false);
                 holder.title = (TextView) convertView.findViewById(R.id.textTitle);
                 holder.hint = (TextView) convertView.findViewById(R.id.textHint);
                 convertView.setTag(holder);

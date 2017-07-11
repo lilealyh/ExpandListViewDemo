@@ -49,6 +49,7 @@ public class MyScrollView extends ScrollView {
         if (getChildCount() > 0) {
             contentView = getChildAt(0);
         }
+        super.onFinishInflate();
     }
 
     @Override

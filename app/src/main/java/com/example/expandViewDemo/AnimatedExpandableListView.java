@@ -25,6 +25,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import android.view.animation.Transformation;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+
 
 /**
  * This class defines an ExpandableListView which supports animations for
@@ -402,8 +404,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
                 final int len = getRealChildrenCount(groupPosition);
                 for (int i = info.firstChildPosition; i < len; i++) {
-                    View childView = getRealChildView(groupPosition, i, (i == len - 1), null, parent);
-                    
+                    final View childView = getRealChildView(groupPosition, i, (i == len - 1), null, parent);
                     LayoutParams p = (LayoutParams) childView.getLayoutParams();
                     if (p == null) {
                         p = (LayoutParams) generateDefaultLayoutParams();
@@ -436,7 +437,6 @@ public class AnimatedExpandableListView extends ExpandableListView {
                         break;
                     }
                 }
-
                 Object o;
                 int state = (o = dummyView.getTag()) == null ? STATE_IDLE : (Integer) o;
 
@@ -507,6 +507,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
         }
 
     }
+
 
     private static class DummyView extends View {
         private List<View> views = new ArrayList<View>();
