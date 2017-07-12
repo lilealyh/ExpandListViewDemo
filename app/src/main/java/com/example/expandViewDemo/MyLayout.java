@@ -97,9 +97,13 @@ public class MyLayout extends LinearLayout {
     // 设置滚动的相对偏移
     protected void beginScroll(int dx, int dy) {
         // 第一,二个参数起始位置;第三,四个滚动的偏移量
-        Log.v("lilea","FinalY=="+mScroller.getFinalY()+" dy=="+dy);
-        mScroller.startScroll(mScroller.getFinalX(), mScroller.getFinalY(), dx,
-                dy);
+        int finalY=mScroller.getFinalY();
+        int scrollRangePos=finalY+dy;
+        Log.v("lilea","FinalY=="+mScroller.getFinalY()+" dy=="+Math.abs(dy)+" scrollRangePos==="+scrollRangePos);
+        if(scrollRangePos>=-840&&scrollRangePos<=-328){
+
+            mScroller.startScroll(mScroller.getFinalX(), mScroller.getFinalY(), dx,dy);
+        }
         // 必须执行invalidate()从而调用computeScroll()
         invalidate();
     }
