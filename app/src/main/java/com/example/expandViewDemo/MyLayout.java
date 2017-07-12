@@ -100,15 +100,20 @@ public class MyLayout extends LinearLayout {
         int finalY=mScroller.getFinalY();
         int scrollRangePos=finalY+dy;
         Log.v("lilea","FinalY=="+mScroller.getFinalY()+" dy=="+Math.abs(dy)+" scrollRangePos==="+scrollRangePos);
-        if(scrollRangePos>=-840&&scrollRangePos<=-328){
-
-            mScroller.startScroll(mScroller.getFinalX(), mScroller.getFinalY(), dx,dy);
+        if(scrollRangePos>-328){
+            mScroller.setFinalY(-328);
+        }
+        else if(scrollRangePos<-840){
+            mScroller.setFinalY(-840);
+        }else {
+//            mScroller.startScroll(mScroller.getFinalX(), mScroller.getFinalY(), dx,dy);
+            mScroller.startScroll(0, mScroller.getFinalY(),0,dy);
         }
         // 必须执行invalidate()从而调用computeScroll()
         invalidate();
     }
-    public void setMyFinalY(){
-        mScroller.setFinalY(-328);
+    public void setMyFinalY(int finalY){
+        mScroller.setFinalY(finalY);
         invalidate();
     }
     public int getFinalY(){

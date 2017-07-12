@@ -34,7 +34,7 @@ public class ViewActivity extends Activity {
 
             item.title = "Group " + i;
             if(i==1){
-                for(int j = 0; j < 2; j++) {
+                for(int j = 0; j < Math.round(Math.random()*5+1); j++) {
                     ChildItem child = new ChildItem();
                     child.title = "Awesome item " + j;
                     child.hint = "Too awesome";
@@ -42,7 +42,7 @@ public class ViewActivity extends Activity {
                 }
             }
             if(i==2){
-                for(int j = 0; j < 10; j++) {
+                for(int j = 0; j < Math.round(Math.random()*8+1); j++) {
                     ChildItem child = new ChildItem();
                     child.title = "Awesome item " + j;
                     child.hint = "Too awesome";
@@ -50,7 +50,7 @@ public class ViewActivity extends Activity {
                 }
             }
             if(i==3){
-                for(int j = 0; j < 4; j++) {
+                for(int j = 0; j < Math.round(Math.random()*10+1); j++) {
                     ChildItem child = new ChildItem();
                     child.title = "Awesome item " + j;
                     child.hint = "Too awesome";
@@ -78,12 +78,29 @@ public class ViewActivity extends Activity {
                 // We call collapseGroupWithAnimation(int) and
                 // expandGroupWithAnimation(int) to animate group
                 // expansion/collapse.
+                ViewGroup.LayoutParams p=listView.getLayoutParams();
+                int expandHeight=adapter.getRealChildrenCount(groupPosition)*128;
                 if (listView.isGroupExpanded(groupPosition)) {
                     listView.collapseGroupWithAnimation(groupPosition);
+                    visiableHeight-=expandHeight;
+                    if(visiableHeight==384){
+//                        myLayout.beginScroll(0,expandHeight);
+                        myLayout.setMyFinalY(-840);
+                    }
+                    if(visiableHeight>384&&visiableHeight<896){
+                        myLayout.beginScroll(0,-(896-visiableHeight));
+                    }
                 }
                 else {
                     listView.expandGroupWithAnimation(groupPosition);
+                    visiableHeight+=expandHeight;
+                    myLayout.beginScroll(0,expandHeight);
+                    if(expandHeight>512||visiableHeight>896){
+                        p.height=896;
+                        listView.setLayoutParams(p);
+                    }
                 }
+                Log.v("lilea","visiableHeight==="+visiableHeight+" p.height==="+p.height+" expandHeight==="+expandHeight);
                 return true;
             }
 
