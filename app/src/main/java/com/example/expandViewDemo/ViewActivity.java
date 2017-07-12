@@ -78,67 +78,12 @@ public class ViewActivity extends Activity {
                 // We call collapseGroupWithAnimation(int) and
                 // expandGroupWithAnimation(int) to animate group
                 // expansion/collapse.
-                Log.v("lilea","listViewHeight==="+listView.getLayoutParams().height);
-                ExpandHeight=adapter.getRealChildrenCount(groupPosition)*128;
-//                Log.v("lilea","expandheight=="+ExpandHeight+" currentViewHeight==="+getCurrentViewHeight());
                 if (listView.isGroupExpanded(groupPosition)) {
                     listView.collapseGroupWithAnimation(groupPosition);
-                    if(ExpandHeight>896&&listView.getLayoutParams().height!=384){
-                        myLayout.beginScroll(0,-512);
-//                        myLayout.setMyFinalY();
-                    }
-                    else {
-                        if(myLayout.getFinalY()!=-840){
-                            myLayout.beginScroll(0,-ExpandHeight);
-                        }
-                        ViewGroup.LayoutParams params = listView.getLayoutParams();
-                        if(params.height!=328){
-                            params.height -= ExpandHeight;
-                        }
-                        if(myLayout.getFinalY()==-840){
-                            params.height=384;
-                        }
-                        listView.setLayoutParams(params);
-                    }
                 }
-
                 else {
                     listView.expandGroupWithAnimation(groupPosition);
-                    if(ExpandHeight>896){
-//                        myLayout.beginScroll(0,512);
-//                        myLayout.setMyFinalY();
-                        if(myLayout.getFinalY()!=-328){
-//                            myLayout.beginScroll(0,512);
-                            myLayout.setMyFinalY();
-                            ViewGroup.LayoutParams params = listView.getLayoutParams();
-                            params.height = 896;
-                            listView.setLayoutParams(params);
-                        }
-                    }
-                    else{
-                        if(ExpandHeight+myLayout.getFinalY()>-328){
-                            myLayout.setMyFinalY();
-                            ViewGroup.LayoutParams params = listView.getLayoutParams();
-                            params.height = 896;
-                            listView.setLayoutParams(params);
-                        }
-                        else {
-                            myLayout.beginScroll(0,ExpandHeight);
-                            ViewGroup.LayoutParams params = listView.getLayoutParams();
-                            if(myLayout.getFinalY()!=-328){
-                                if(params.height==-1){
-                                    params.height=384;
-                                }
-                                params.height += ExpandHeight;
-                            }
-                            else {
-                                params.height = 896;
-                            }
-                            listView.setLayoutParams(params);
-                        }
-                    }
                 }
-                Log.v("lilea","visiableHeight=="+visiableHeight);
                 return true;
             }
 
