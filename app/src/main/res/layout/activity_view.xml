@@ -13,15 +13,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#4ec6c6"
             android:layout_margin="5dp"
             android:orientation="vertical">
 
             <!--<TextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:gravity="center"-->
-                <!--android:text="brd"/>-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:text="brd"/>-->
 
             <com.example.expandViewDemo.AnimatedExpandableListView
                 android:id="@+id/listView"

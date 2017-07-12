@@ -7,7 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -31,7 +34,7 @@ public class ViewActivity extends Activity {
 
             item.title = "Group " + i;
             if(i==1){
-                for(int j = 0; j < 1; j++) {
+                for(int j = 0; j < 2; j++) {
                     ChildItem child = new ChildItem();
                     child.title = "Awesome item " + j;
                     child.hint = "Too awesome";
@@ -80,6 +83,19 @@ public class ViewActivity extends Activity {
                 if (listView.isGroupExpanded(groupPosition)) {
                     listView.collapseGroupWithAnimation(groupPosition);
                     visiableHeight-=ExpandHeight;
+//                    setListHeight(listView,adapter);
+
+//                    ViewGroup.LayoutParams params=mScrollView.getLayoutParams();
+//                    visiableHeight-=ExpandHeight;
+//                    params.height = visiableHeight;
+//                    mScrollView.setLayoutParams(params);
+
+//                    ViewGroup.LayoutParams params = listView.getLayoutParams();
+//                    visiableHeight-=ExpandHeight;
+//                    params.height = visiableHeight;
+//                    Log.v("lilea","params.height=="+params.height);
+//                    listView.setLayoutParams(params);
+                    visiableHeight-=ExpandHeight;
                     if(ExpandHeight>896){
                         myLayout.beginScroll(0,-512);
                     }
@@ -89,13 +105,34 @@ public class ViewActivity extends Activity {
                 } else {
                     listView.expandGroupWithAnimation(groupPosition);
                     visiableHeight+=ExpandHeight;
+//                    setListHeight(listView,adapter);
+//                    ViewGroup.LayoutParams params=mScrollView.getLayoutParams();
+//                    visiableHeight+=ExpandHeight;
+//                    params.height = visiableHeight;
+//                    mScrollView.setLayoutParams(params);
 
+//                    visiableHeight+=ExpandHeight;
+//                    ViewGroup.LayoutParams params = listView.getLayoutParams();
+//                    params.height = visiableHeight;
+//                    Log.v("lilea","params.height=="+params.height);
+//                    listView.setLayoutParams(params);
+
+                    visiableHeight+=ExpandHeight;
                     if(ExpandHeight>896){
-                        myLayout.beginScroll(0,512);
+//                        myLayout.beginScroll(0,512);
+//                        myLayout.setMyFinalY();
+                        if(myLayout.getFinalY()!=-328){
+//                            myLayout.beginScroll(0,512);
+                            myLayout.setMyFinalY();
+                        }
                     }
                     else{
-
-                        myLayout.beginScroll(0,ExpandHeight);
+                        if(ExpandHeight+myLayout.getFinalY()>-328){
+                            myLayout.setMyFinalY();
+                        }
+                        else {
+                            myLayout.beginScroll(0,ExpandHeight);
+                        }
                     }
                 }
                 Log.v("lilea","visiableHeight=="+visiableHeight);
@@ -229,5 +266,41 @@ public class ViewActivity extends Activity {
             return true;
         }
 
+    }
+    public void setListHeight(ExpandableListView listView, AnimatedExpandableListView.AnimatedExpandableListAdapter listAdapter) {
+
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        int total = 0;
+
+        View listItem;
+
+        for (int i = 0; i < listAdapter.getGroupCount(); i++) {
+            listItem = listAdapter.getGroupView(i, false, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+//            total += (listAdapter.getChildrenCount(0) - 1);
+        }
+
+        for(int i = 0; i < listAdapter.getGroupCount() ; i++) {
+
+            if (listView.isGroupExpanded(i))
+                for (int j = 0; j < listAdapter.getChildrenCount(i); j++) {
+                    listItem = listAdapter.getChildView(i, j, false, null, listView);
+                    listItem.measure(0, 0);
+                    totalHeight += listItem.getMeasuredHeight();
+//                    total += (listAdapter.getChildrenCount(i) - 1);
+                }
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+
+        params.height = totalHeight + (listView.getDividerHeight() * total);
+        Log.v("lilea","params.height=="+params.height);
+
+        listView.setLayoutParams(params);
     }
 }

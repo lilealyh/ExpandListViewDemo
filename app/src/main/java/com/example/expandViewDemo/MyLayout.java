@@ -103,6 +103,12 @@ public class MyLayout extends LinearLayout {
         // 必须执行invalidate()从而调用computeScroll()
         invalidate();
     }
-
+    public void setMyFinalY(){
+        mScroller.setFinalY(-328);
+        invalidate();
+    }
+    public int getFinalY(){
+        return mScroller.getFinalY();
+    }
      
 }
