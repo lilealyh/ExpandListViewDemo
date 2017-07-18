@@ -13,6 +13,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#5fb0d0"
+            android:layout_margin="2dp"
             android:orientation="vertical">
 
             <!--<TextView-->
@@ -23,6 +25,7 @@
 
             <com.example.expandViewDemo.AnimatedExpandableListView
                 android:id="@+id/listView"
+                android:background="#e9a1ab"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </LinearLayout>

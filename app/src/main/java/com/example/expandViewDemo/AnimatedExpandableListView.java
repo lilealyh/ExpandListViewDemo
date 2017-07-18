@@ -158,7 +158,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
         if (lastGroup && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             return expandGroup(groupPos, true);
         }
-        
+
         int groupFlatPos = getFlatListPosition(getPackedPositionForGroup(groupPos));
         if (groupFlatPos != -1) {
             int childIndex = groupFlatPos - getFirstVisiblePosition();
