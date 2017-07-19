@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -29,6 +30,8 @@ public class ViewActivity extends Activity {
     private int ExpandHeight = 0;
     private int visiableHeight = 384;
     MyLayout myLayout;
+    Button mbtn;
+    String title[] = {"System garbage", "Cache trash", "Unload residue"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,8 @@ public class ViewActivity extends Activity {
         for (int i = 1; i < 4; i++) {
             GroupItem item = new GroupItem();
 
-            item.title = "Group " + i;
+            item.title = title[i - 1];
+
             if (i == 1) {
                 for (int j = 1; j < 8/*Math.round(Math.random()*10+10)*/; j++) {
                     ChildItem child = new ChildItem();
@@ -70,29 +74,19 @@ public class ViewActivity extends Activity {
         }
 
         listView = (AnimatedExpandableListView) findViewById(R.id.listView);
-
+        mbtn = (Button) findViewById(R.id.clean_btn);
+        mbtn.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.v("lilea", "mbtn height===" + mbtn.getMeasuredHeight());
+            }
+        });
         adapter = new ExampleAdapter(this, listView);
 
         myLayout = (MyLayout) findViewById(R.id.mLayout);
+
         adapter.setData(items);
-
         listView.setAdapter(adapter);
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                Log.v("lilea", "onScrollStateChanged===" + scrollState);
-                if (scrollState == 0) {
-//                    listView.smoothScrollByOffset(20);
-//                    listView.smoothScrollToPosition(10);
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                Log.v("lilea", "onScroll firstVisibleItem===" + firstVisibleItem);
-
-            }
-        });
 
 
         // In order to show animations, we need to use a custom click handler
@@ -140,20 +134,31 @@ public class ViewActivity extends Activity {
                 Scroller scroller = myLayout.getmScroller();
                 int expandHeight = adapter.getRealChildrenCount(groupPosition) * 128;
                 Log.v("lilea", "firtvisiable==" + listView.getFirstVisiblePosition());
+                int durationTime=1000;
                 if (listView.isGroupExpanded(groupPosition)) {
                     visiableHeight -= expandHeight;
                     if (visiableHeight == 384) {
-                        scroller.startScroll(0, scroller.getFinalY(), 0, -840 - scroller.getFinalY(), 500);
-
+//                        scroller.startScroll(0, scroller.getFinalY(), 0, -840 - scroller.getFinalY(), 500);
+                        scroller.startScroll(0, scroller.getFinalY(), 0, -750 - scroller.getFinalY(), 500);
                     }
                     if (visiableHeight > 384 && visiableHeight < 896) {
                         scroller.startScroll(0, scroller.getFinalY(), 0, -(896 - visiableHeight), 500);
+                    }
+                    int lastVisiblePos=listView.getLastVisiblePosition();
+                    long packedPos = listView.getExpandableListPosition(lastVisiblePos);
+                    int lastChildPos = getPackedPositionChild(packedPos);
+                    int lastGroupPos = getPackedPositionGroup(packedPos);
+
+                    if (listView.isGroupExpanded(groupPosition - 1 < 0 ? 0 : groupPosition - 1)/*&&groupPosition==2*/) {
+                        int count=adapter.getRealChildrenCount(groupPosition);
+                        int height=listView.getChildAt(lastChildPos).getBottom();
+                        listView.smoothScrollBy(-(lastChildPos*128+8), durationTime);//4为偏移误差
                     }
                     parent.collapseGroup(groupPosition);
                 } else {
                     visiableHeight += expandHeight;
                     if (expandHeight > 512 || visiableHeight > 896) {
-                        p.height = 896;
+                        p.height = 768;//old is 896
                         listView.setLayoutParams(p);
                     }
                     myLayout.beginScroll(0, expandHeight);
@@ -174,7 +179,7 @@ public class ViewActivity extends Activity {
                         remainCount = preGroupCount + adapter.getRealChildrenCount(0) + 1 - firstVisiblePos;
                     }
                     int remainCountHeight = remainCount * 128;
-                    int scrollDistance = remainCountHeight + listView.getChildAt(0).getBottom();
+                    int scrollDistance = remainCountHeight + listView.getChildAt(0).getBottom()+8;
 
                     if (firstVisiblePos == 0 && groupPosition == 1) {//第0组没有展开，直接展开第1组位置
                         scrollDistance = 128;
@@ -189,15 +194,15 @@ public class ViewActivity extends Activity {
                     int firstChildPos = getPackedPositionChild(packedPos);
                     int firstGroupPos = getPackedPositionGroup(packedPos);
                     if (firstGroupPos == 0 && groupPosition == 2 && firstVisiblePos > 1) {//0组展开1组没展开，直接点击2组
-                        scrollDistance = (adapter.getRealChildrenCount(firstGroupPos) - firstChildPos) * 128 + listView.getChildAt(0).getBottom() + 6;//4为滑动误差
+                        scrollDistance = (adapter.getRealChildrenCount(firstGroupPos) - firstChildPos) * 128 + listView.getChildAt(0).getBottom() + 8;//8为滑动误差
                     }
                     if (firstGroupPos == 1 && groupPosition == 2) {
-                        scrollDistance = (adapter.getRealChildrenCount(firstGroupPos) - firstChildPos-1) * 128 + listView.getChildAt(0).getBottom() + 6;//4为滑动误差
+                        scrollDistance = (adapter.getRealChildrenCount(firstGroupPos) - firstChildPos - 1) * 128 + listView.getChildAt(0).getBottom() + 10;//8为滑动误差
                     }
                     if (groupPosition != 0) {
 
 //                    listView.smoothScrollByOffset(scrollDistance);
-                        listView.smoothScrollBy(scrollDistance, 1000);
+                        listView.smoothScrollBy(scrollDistance, 1000);//4为偏移误差
                     }
                 }
 
@@ -297,7 +302,7 @@ public class ViewActivity extends Activity {
             } else {
                 holder = (ChildHolder) convertView.getTag();
             }
-
+            convertView.setBackgroundColor(getResources().getColor(R.color.color_item_background));
             holder.title.setText(item.title);
             holder.hint.setText(item.hint);
 

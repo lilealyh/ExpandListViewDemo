@@ -10,24 +10,47 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#5fb0d0"
-            android:layout_margin="2dp"
-            android:orientation="vertical">
+            >
 
-            <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="center"-->
-            <!--android:text="brd"/>-->
+            <Button
+                android:id="@+id/clean_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/ic_scan_btn"
+                android:text="@string/ic_scan_clean"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"/>
 
-            <com.example.expandViewDemo.AnimatedExpandableListView
-                android:id="@+id/listView"
-                android:background="#e9a1ab"
+
+            <LinearLayout
+                android:id="@+id/mLinearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_below="@+id/clean_btn"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="-28dp"
+                android:background="@drawable/ripple_clean_item"
+                android:orientation="vertical">
+
+                <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center"-->
+                <!--android:text="brd"/>-->
+
+                <com.example.expandViewDemo.AnimatedExpandableListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
     </com.example.expandViewDemo.MyLayout>
 </LinearLayout>

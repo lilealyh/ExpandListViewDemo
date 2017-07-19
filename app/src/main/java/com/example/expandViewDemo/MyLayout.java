@@ -23,7 +23,7 @@ public class MyLayout extends LinearLayout {
         mScroller = new Scroller(context);
         mGestureDetector = new GestureDetector(context,
                 new GestureListenerImpl());
-        mScroller.setFinalY(-840);
+        mScroller.setFinalY(-750);//old is -840
     }
 
     @Override
@@ -100,9 +100,8 @@ public class MyLayout extends LinearLayout {
         int finalY=mScroller.getFinalY();
         int scrollRangePos=finalY+dy;
         Log.v("lilea","FinalY=="+mScroller.getFinalY()+" dy=="+Math.abs(dy)+" scrollRangePos==="+scrollRangePos);
-        if(scrollRangePos>-328){
-//            mScroller.setFinalY(-328);
-            mScroller.startScroll(0, mScroller.getFinalY(),0,-328-mScroller.getFinalY());
+        if(scrollRangePos>-368){//old is -328
+            mScroller.startScroll(0, mScroller.getFinalY(),0,-368-mScroller.getFinalY());//old is -328
         }
         else if(scrollRangePos<-840){
             mScroller.setFinalY(-840);
